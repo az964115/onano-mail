@@ -2,68 +2,90 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>郵件放行系統</title>
+  <title>信件查詢身份驗證</title>
   <style>
     body {
-      font-family: "Microsoft JhengHei", sans-serif;
-      margin: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 40px;
     }
-    .hidden {
-      display: none;
+    .container {
+      background: white;
+      max-width: 500px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
-    input {
-      padding: 5px;
-      margin: 5px;
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input[type="text"],
+    input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 5px;
     }
     button {
-      padding: 6px 12px;
-    }
-    iframe {
-      width: 100%;
-      height: 600px;
-      border: 1px solid #ccc;
       margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #0078D7;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005a9e;
     }
   </style>
 </head>
 <body>
 
-<h2>📬 郵件放行系統</h2>
+<div class="container">
+  <h2>信件查詢 - 身份驗證</h2>
+  <form id="verifyForm">
+    <label for="emp_id">工號：</label>
+    <input type="text" id="emp_id" name="emp_id" required>
 
-<!-- 第一步：驗證身份 -->
-<div id="step1">
-  <h3>步驟 1：身份驗證</h3>
-  <label>工號：<input type="text" id="empId"></label><br>
-  <label>身分證後四碼：<input type="text" id="idLast4" maxlength="4"></label><br>
-  <button onclick="verifyUser()">驗證</button>
-</div>
+    <label for="id_last4">身分證後四碼：</label>
+    <input type="text" id="id_last4" name="id_last4" maxlength="4" required>
 
-<!-- 第二步：查詢條件與登入頁 -->
-<div id="step2" class="hidden">
-  <h3>步驟 2：輸入查詢條件</h3>
-  <label>郵件標題關鍵字：<input type="text" id="subject"></label><br>
-  <label>日期：<input type="date" id="mailDate"></label><br><br>
-  
-  <h3>步驟 3：登入 Mail 系統</h3>
-  <p>請使用下方登入視窗輸入帳號、密碼與驗證碼，登入後手動查詢。</p>
+    <label for="mail_subject">信件標題：</label>
+    <input type="text" id="mail_subject" name="mail_subject" required>
 
-  <!-- iframe 內嵌 mail login 頁面 -->
-  <iframe id="mailIframe" src="https://192.168.8.25:800/login.php"></iframe>
+    <label for="mail_date">日期：</label>
+    <input type="date" id="mail_date" name="mail_date" required>
+
+    <button type="button" onclick="proceedLogin()">下一步</button>
+  </form>
 </div>
 
 <script>
-  function verifyUser() {
-    const empId = document.getElementById("empId").value.trim();
-    const idLast4 = document.getElementById("idLast4").value.trim();
+  function proceedLogin() {
+    const empId = document.getElementById('emp_id').value.trim();
+    const id4 = document.getElementById('id_last4').value.trim();
+    const subject = document.getElementById('mail_subject').value.trim();
+    const date = document.getElementById('mail_date').value;
 
-    // 這裡請替換成你的實際驗證邏輯，以下是範例驗證
-    if (empId === "12345" && idLast4 === "6789") {
-      alert("身份驗證成功！");
-      document.getElementById("step1").classList.add("hidden");
-      document.getElementById("step2").classList.remove("hidden");
-    } else {
-      alert("驗證失敗，請檢查輸入資訊");
+    if (!empId || !id4 || !subject || !date) {
+      alert("請填寫所有欄位！");
+      return;
     }
+
+    if (id4.length !== 4 || !/^\d{4}$/.test(id4)) {
+      alert("身分證後四碼格式錯誤，請輸入 4 位數字！");
+      return;
+    }
+
+    // ✅ 此處可加入前端身份驗證（範例中略過）
+    // ✅ 若要與後端驗證，可以用 fetch 發送資料
+
+    // ✅ 若驗證通過，開啟 Mail 登入頁
+    window.open("https://192.168.8.25:800/login.php", "_blank");
   }
 </script>
 
