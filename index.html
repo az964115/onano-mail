@@ -1,1 +1,71 @@
-index.html
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>郵件放行系統</title>
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      margin: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    input {
+      padding: 5px;
+      margin: 5px;
+    }
+    button {
+      padding: 6px 12px;
+    }
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>📬 郵件放行系統</h2>
+
+<!-- 第一步：驗證身份 -->
+<div id="step1">
+  <h3>步驟 1：身份驗證</h3>
+  <label>工號：<input type="text" id="empId"></label><br>
+  <label>身分證後四碼：<input type="text" id="idLast4" maxlength="4"></label><br>
+  <button onclick="verifyUser()">驗證</button>
+</div>
+
+<!-- 第二步：查詢條件與登入頁 -->
+<div id="step2" class="hidden">
+  <h3>步驟 2：輸入查詢條件</h3>
+  <label>郵件標題關鍵字：<input type="text" id="subject"></label><br>
+  <label>日期：<input type="date" id="mailDate"></label><br><br>
+  
+  <h3>步驟 3：登入 Mail 系統</h3>
+  <p>請使用下方登入視窗輸入帳號、密碼與驗證碼，登入後手動查詢。</p>
+
+  <!-- iframe 內嵌 mail login 頁面 -->
+  <iframe id="mailIframe" src="https://192.168.8.25:800/login.php"></iframe>
+</div>
+
+<script>
+  function verifyUser() {
+    const empId = document.getElementById("empId").value.trim();
+    const idLast4 = document.getElementById("idLast4").value.trim();
+
+    // 這裡請替換成你的實際驗證邏輯，以下是範例驗證
+    if (empId === "12345" && idLast4 === "6789") {
+      alert("身份驗證成功！");
+      document.getElementById("step1").classList.add("hidden");
+      document.getElementById("step2").classList.remove("hidden");
+    } else {
+      alert("驗證失敗，請檢查輸入資訊");
+    }
+  }
+</script>
+
+</body>
+</html>
